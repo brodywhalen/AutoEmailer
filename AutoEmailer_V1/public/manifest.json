@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "AutoEmailer_v1",
+    "version": "1.0",
+    "description": "Mass email with a personalized touch",
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "scripting",
+        "http://*/*",
+        "https://*/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+              ],
+            "js": ["my-script.ts"]
+        }
+    ],
+    "host_permissions": [
+      "http://*/*",
+      "https://*/*"
+    ]
+
+  }
