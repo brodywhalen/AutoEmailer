@@ -3,11 +3,19 @@
     "name": "AutoEmailer_v1",
     "version": "1.0",
     "description": "Mass email with a personalized touch",
+    "background": {
+      "service_worker": "background.js"  
+    },
+    "side_panel": {
+        "default_path": "index.html"
+    },
     "action": {
-        "default_popup": "index.html"
+        "default_title": "Click to open panel"
     },
     "permissions": [
-        "scripting"
+        "scripting",
+        "sidePanel",
+        "contextMenus"
     ],
     "content_scripts": [
         {
@@ -15,7 +23,7 @@
                 "http://*/*",
                 "https://*/*"
               ],
-            "js": ["my-script.ts"],
+            "js": ["my-script.js"],
             "css": ["my-styles.css"]
         }
     ],
