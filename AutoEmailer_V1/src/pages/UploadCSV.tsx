@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, {useState,useEffect, ReactNode} from "react";
 import Papa, { ParseResult } from 'papaparse';
 
 const UploadCSV = () => {
@@ -6,9 +6,9 @@ const UploadCSV = () => {
     
     // const fileInputRef = useRef(null);
     const [myFile, setMyFile] = useState<File>();
-    const [parsedFile, setParsedFile] = useState<ParseResult<unknown>>();
+    const [parsedFile, setParsedFile] = useState<ParseResult<string[]>>();
     
-    useEffect (()=> console.log('data: ',parsedFile?.data, 'header name: ',parsedFile?.meta), [parsedFile]) 
+    useEffect (()=> console.log('data: ',parsedFile, 'header name: ',parsedFile?.meta), [parsedFile]) 
 
     const onFileChange = (event:React.ChangeEvent<HTMLInputElement>)=> {
         console.log('useState method filechange: ', event.target.files![0])
@@ -48,7 +48,7 @@ const UploadCSV = () => {
         if(myFile){
             //call back function that runs after file is read
             const localParse = (myString:string):void => {
-                const parsed = Papa.parse(myString, {header: true})
+                const parsed: ParseResult<string[]> = Papa.parse(myString, {header: true})
                 //saves to state
                 setParsedFile(parsed)
             }
@@ -57,11 +57,12 @@ const UploadCSV = () => {
             setParsedFile(undefined);
         }
     }
-// const selectOptions = () => {
-//     return(
-        
-//     )
-// }
+const renderOptions = ():ReactNode => {
+    
+    // render options as headers pulled from file
+    const options = parsedFile?.meta.fields?.map(header => <option value={header}>{header}</option>)
+    return(options)
+}
 
 
 
@@ -81,10 +82,10 @@ const UploadCSV = () => {
                 <li className="menu-list"> Map Columns </li>
                 {myFile && checkFileType(myFile) ? (
                     <form className="menu-list-select">
-                        <h3 className="select-row"> First Name <select></select></h3>
-                        <h3 className="select-row"> Last Name <select></select></h3>
-                        <h3 className="select-row"> Email Address <select></select></h3>
-                        <h3 className="select-row"> LinkedIn URL<select></select></h3>
+                        <h3 className="select-row"> First Name <select>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> Last Name <select>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> Email Address <select>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> LinkedIn URL <select>{renderOptions()}</select></h3>
                     </form>
                 ): (<div></div>)}
 
