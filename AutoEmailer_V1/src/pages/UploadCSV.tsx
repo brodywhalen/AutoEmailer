@@ -1,35 +1,26 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
+import Papa, { ParseResult } from 'papaparse';
 
 const UploadCSV = () => {
+
+    
     // const fileInputRef = useRef(null);
     const [myFile, setMyFile] = useState<File>();
+    const [parsedFile, setParsedFile] = useState<ParseResult<unknown>>();
+    
+    useEffect (()=> console.log('data: ',parsedFile?.data, 'header name: ',parsedFile?.meta), [parsedFile]) 
 
-    // const submitCSV = (event: React.FormEvent) => {
-    //     event.preventDefault()
-    //     console.log("my file is ", fileInputRef.current)
-    //     if(fileInputRef.current)
-    //     {   
-            
-    //         //print uploaded file metadata
-    //         console.log("File Uploade MetaData: ",(fileInputRef.current as HTMLInputElement).files![0])
-    //         //read and print the file
-    //         const file = (fileInputRef.current as HTMLInputElement).files![0]
-    //         const reader = new FileReader()
-    //         reader.onload = event => console.log((event.target as FileReader).result);
-    //         reader.onerror = error => {throw(error)};
-    //         reader.readAsText(file)
-        
-    //         // if((fileInputRef.current as HTMLInputElement).hasAttribute("files"))
-    //         // {
-    //         //     console.log((fileInputRef.current as HTMLInputElement).files)
-    //         // }
-    //     }
-    // }
     const onFileChange = (event:React.ChangeEvent<HTMLInputElement>)=> {
         console.log('useState method filechange: ', event.target.files![0])
         setMyFile(event.target.files![0]);
-    }
 
+        // parse file right after whcih will set to state
+        parseStringyFile(event.target.files![0]);
+
+        // if(myFile && checkFileType(event.target.files![0])){
+
+        // }
+    }
     const checkFileType = (myFile: File): boolean => {
         const filenameEXT = (myFile.name.split('.').pop() as string).toLowerCase();
         const allowedExtensions = ['csv'];
@@ -40,6 +31,38 @@ const UploadCSV = () => {
             return false
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    const fileIntoString = (myFile:File, myFunc:Function):void => {
+
+        //read file
+        const reader = new FileReader();
+        reader.onload = event => {myFunc((event.target as FileReader).result)}
+        reader.onerror = error => {throw(error)}
+        reader.readAsText(myFile);
+           
+        // const parsedFile = Papa.parse(stringyFile)
+        
+    }
+    const parseStringyFile = (myFile:File): void => {
+
+        if(myFile){
+            //call back function that runs after file is read
+            const localParse = (myString:string):void => {
+                const parsed = Papa.parse(myString, {header: true})
+                //saves to state
+                setParsedFile(parsed)
+            }
+            fileIntoString(myFile, localParse)
+        } else {
+            setParsedFile(undefined);
+        }
+    }
+// const selectOptions = () => {
+//     return(
+        
+//     )
+// }
+
 
 
     return(
@@ -56,6 +79,15 @@ const UploadCSV = () => {
 
                 </li>
                 <li className="menu-list"> Map Columns </li>
+                {myFile && checkFileType(myFile) ? (
+                    <form className="menu-list-select">
+                        <h3 className="select-row"> First Name <select></select></h3>
+                        <h3 className="select-row"> Last Name <select></select></h3>
+                        <h3 className="select-row"> Email Address <select></select></h3>
+                        <h3 className="select-row"> LinkedIn URL<select></select></h3>
+                    </form>
+                ): (<div></div>)}
+
             </ol>
         </section>
     </div>
