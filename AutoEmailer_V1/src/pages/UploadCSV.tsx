@@ -7,6 +7,7 @@ const UploadCSV = () => {
     // const fileInputRef = useRef(null);
     const [myFile, setMyFile] = useState<File>();
     const [parsedFile, setParsedFile] = useState<ParseResult<string[]>>();
+    const [fieldCheck, setFieldCheck] = useState<boolean>(false);
     
     useEffect (()=> console.log('data: ',parsedFile, 'header name: ',parsedFile?.meta), [parsedFile]) 
 
@@ -84,8 +85,12 @@ const renderOptions = ():ReactNode => {
                     <form className="menu-list-select">
                         <h3 className="select-row"> First Name <select>{renderOptions()}</select></h3>
                         <h3 className="select-row"> Last Name <select>{renderOptions()}</select></h3>
-                        <h3 className="select-row"> Email Address <select>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> *Email Address <select>{renderOptions()}</select></h3>
                         <h3 className="select-row"> LinkedIn URL <select>{renderOptions()}</select></h3>
+                        <section>
+                            <h3> Custom Fields <input type="checkbox" checked={fieldCheck} onChange={() => setFieldCheck(!fieldCheck)}></input></h3>
+                            {fieldCheck ? (<div><label> Name </label><input/><label> Column <select>{renderOptions()}</select></label></div>): (<div></div>)}
+                        </section>
                     </form>
                 ): (<div></div>)}
 
