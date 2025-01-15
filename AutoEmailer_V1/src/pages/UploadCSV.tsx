@@ -11,6 +11,9 @@ const UploadCSV = () => {
     const [parsedFile, setParsedFile] = useState<ParseResult<string[]>>();
     const [fieldCheck, setFieldCheck] = useState<boolean>(false);
     const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: 'test', value: "testy"}]) // test value at first
+    // column structure is 4 long. the order is email address, first, last, and LI profile.
+    // const[mainColumns, setMainColumns] = useState<number[]>([0,0,0,0])
+
     
     useEffect (()=> console.log('data: ',parsedFile, 'header name: ',parsedFile?.meta), [parsedFile]) 
 
@@ -63,15 +66,15 @@ const UploadCSV = () => {
     }
 const renderOptions = ():ReactNode => {
     
-    // render options as headers pulled from file
-    const options = parsedFile?.meta.fields?.map(header => <option value={header}>{header}</option>)
-    return(options)
+    // render options as headers pulled from file, save value as index of meta fields.
+    const options = parsedFile?.meta.fields?.map((header, index) => <option value={index + 1}>{header}</option>)
+    return(<><option value={0}> no column </option>{options}</>) // 0 value is set as no data assigned.
 }
 const renderAddedParamsList = () =>{
 
     
     // map all added params state to a list. Contains input for param name and dropbox to assign column. X button deletes param and + addes another param.
-    const myitems = addedParams?.map( (param, index) => <div><label> Field Name </label><input value={addedParams[index].param} onChange={(event) => changeParamValue(index,event)}/> <select>{renderOptions()}</select>
+    const myitems = addedParams?.map((_param, index) => <div><label> Field Name </label><input value={addedParams[index].param} onChange={(event) => changeParamTitle(index,event)}/> <select onChange={(event) => changeParamValue(index, event)}>{renderOptions()}</select>
         <button onClick={(event) => addParam(event,index)}> ➕ </button><button> ➖ </button></div>
        
     )
@@ -88,10 +91,24 @@ const addParam = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, index:
    // set state
     setAddedParams(clonedArray)
 }
-const changeParamValue = (index:number, event: React.ChangeEvent<HTMLInputElement>) => {
+const changeParamTitle = (index:number, event: React.ChangeEvent<HTMLInputElement>) => {
     const clonedArray = addedParams.map(a => {return {...a}})
     clonedArray[index].param = event.target.value;
     setAddedParams(clonedArray);
+}
+const changeParamValue = (index: number, event: React.ChangeEvent<HTMLSelectElement>) => {
+    const clonedArray = addedParams.map(a => {return {...a}})
+    clonedArray[index].param = event.target.value;
+    setAddedParams(clonedArray)
+}
+const changeMainColumn = (event) => {
+    
+    
+    console.log('this :',event.target.id)
+    
+    // const nextState = mainColumns.map( (c,i) => {
+    //     if(this.id
+    // })
 }
 
 
@@ -114,7 +131,7 @@ const changeParamValue = (index:number, event: React.ChangeEvent<HTMLInputElemen
                 {myFile && checkFileType(myFile) ? (
                     <form className="menu-list-select">
                         <section className="menu-list-column-select">
-                        <h3 className="select-row"> Email Address* <select>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> Email Address* <select id= "is this thing on?" onChange={changeMainColumn}>{renderOptions()}</select></h3>
                         <h3 className="select-row"> First Name <select>{renderOptions()}</select></h3>
                         <h3 className="select-row"> Last Name <select>{renderOptions()}</select></h3>
                         <h3 className="select-row"> LinkedIn URL <select>{renderOptions()}</select></h3>
