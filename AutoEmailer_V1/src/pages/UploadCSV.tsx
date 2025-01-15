@@ -1,13 +1,16 @@
 import React, {useState,useEffect, ReactNode} from "react";
 import Papa, { ParseResult } from 'papaparse';
+import { AddedParam } from "../utils/types";
 
 const UploadCSV = () => {
+
 
     
     // const fileInputRef = useRef(null);
     const [myFile, setMyFile] = useState<File>();
     const [parsedFile, setParsedFile] = useState<ParseResult<string[]>>();
     const [fieldCheck, setFieldCheck] = useState<boolean>(false);
+    const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: 'test', value: "testy"}]) // test value at first
     
     useEffect (()=> console.log('data: ',parsedFile, 'header name: ',parsedFile?.meta), [parsedFile]) 
 
@@ -64,6 +67,33 @@ const renderOptions = ():ReactNode => {
     const options = parsedFile?.meta.fields?.map(header => <option value={header}>{header}</option>)
     return(options)
 }
+const renderAddedParamsList = () =>{
+
+    
+    // map all added params state to a list. Contains input for param name and dropbox to assign column. X button deletes param and + addes another param.
+    const myitems = addedParams?.map( (param, index) => <div><label> Field Name </label><input value={addedParams[index].param} onChange={(event) => changeParamValue(index,event)}/> <select>{renderOptions()}</select>
+        <button onClick={(event) => addParam(event,index)}> ➕ </button><button> ➖ </button></div>
+       
+    )
+    console.log(addedParams)
+    return( myitems)
+}
+const addParam = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, index:number) => {
+    event.preventDefault()
+    console.log('adding after index: ', index)
+    // need to copy objects with spread syntax
+    const clonedArray = addedParams.map(a => {return {...a}})
+    //splice in the addition with an empty state
+    clonedArray.splice(index +1, 0, { param: "", value: ""})
+   // set state
+    setAddedParams(clonedArray)
+}
+const changeParamValue = (index:number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const clonedArray = addedParams.map(a => {return {...a}})
+    clonedArray[index].param = event.target.value;
+    setAddedParams(clonedArray);
+}
+
 
 
 
@@ -83,13 +113,15 @@ const renderOptions = ():ReactNode => {
                 <li className="menu-list"> Map Columns </li>
                 {myFile && checkFileType(myFile) ? (
                     <form className="menu-list-select">
+                        <section className="menu-list-column-select">
+                        <h3 className="select-row"> Email Address* <select>{renderOptions()}</select></h3>
                         <h3 className="select-row"> First Name <select>{renderOptions()}</select></h3>
                         <h3 className="select-row"> Last Name <select>{renderOptions()}</select></h3>
-                        <h3 className="select-row"> *Email Address <select>{renderOptions()}</select></h3>
                         <h3 className="select-row"> LinkedIn URL <select>{renderOptions()}</select></h3>
+                        </section>
                         <section>
                             <h3> Custom Fields <input type="checkbox" checked={fieldCheck} onChange={() => setFieldCheck(!fieldCheck)}></input></h3>
-                            {fieldCheck ? (<div><label> Name </label><input/><label> Column <select>{renderOptions()}</select></label></div>): (<div></div>)}
+                            {fieldCheck ? (renderAddedParamsList()): (<div></div>)}
                         </section>
                     </form>
                 ): (<div></div>)}
