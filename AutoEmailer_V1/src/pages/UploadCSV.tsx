@@ -101,7 +101,7 @@ const changeParamValue = (index: number, event: React.ChangeEvent<HTMLSelectElem
     clonedArray[index].param = event.target.value;
     setAddedParams(clonedArray)
 }
-const changeMainColumn = (event) => {
+const changeMainColumn = (event : React.ChangeEvent<HTMLSelectElement>) => {
     
     
     console.log('this :',event.target.id)
