@@ -12,11 +12,17 @@ const UploadCSV = () => {
     const [parsedFile, setParsedFile] = useState<ParseResult<string[]>>();
     const [fieldCheck, setFieldCheck] = useState<boolean>(false);
     const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: 'test', value: "testy"}]) // test value at first
-    // column structure is 4 long. the order is email address, first, last, and LI profile.
-    // const[mainColumns, setMainColumns] = useState<number[]>([0,0,0,0])
+    const [selectValue, setSelectValue] = useState<number[]>([0,0,0,0]);
+   
+    // have column values stored, now just need to send to backend properly.
 
     
-    useEffect (()=> console.log('data: ',parsedFile, 'header name: ',parsedFile?.meta), [parsedFile]) 
+    useEffect (()=> 
+        
+        // console.log('data: ',parsedFile, 'header name: ',parsedFile?.meta), [parsedFile]
+        console.log('selected: ', selectValue),[selectValue]   
+        // console.log('paramvalues: ', addedParams[0].param), [addedParams]
+    ) 
 
     const onFileChange = (event:React.ChangeEvent<HTMLInputElement>)=> {
         console.log('useState method filechange: ', event.target.files![0])
@@ -123,17 +129,48 @@ const changeParamValue = (index: number, event: React.ChangeEvent<HTMLSelectElem
 const changeMainColumn = (event : React.ChangeEvent<HTMLSelectElement>) => {
     
     
-    console.log('this :',event.target.id)
+    console.log('this :',event.target.value)
+    const fieldID = event.target.id;
+
+    const newArray = selectValue.map( (c,i) => {
+        if( i === Number(fieldID)){
+            return Number(event.target.value);
+        } else{
+            return c
+        }
+    })
+    setSelectValue(newArray)
+
+
+    // setSelectValue(Number(event.target.value));
     
     // const nextState = mainColumns.map( (c,i) => {
     //     if(this.id
     // })
 }
 const PostList =  async (event: { preventDefault: () => void; }) => {
+
+    // need a way to store current state column ID
+    // could set email --> Linkedin to 1-4, and then start custom fields from 5. 0 is no column assigned
+
+
     event.preventDefault();
     const ListObject = {
         listName: `test ${Math.random()}`,
-        contacts: parsedFile
+        contacts: parsedFile?.data.map( column => {
+            
+            if(fieldCheck){
+                return(
+                    // this will return the added params
+                    addedParams
+                );
+            }
+            return(
+                {
+                
+                }
+            )
+        })
         // find out how to parse file into backend document
 
     }
@@ -160,10 +197,10 @@ const PostList =  async (event: { preventDefault: () => void; }) => {
                 {myFile && checkFileType(myFile) ? (
                     <form className="menu-list-select" onSubmit={PostList}>
                         <section className="menu-list-column-select">
-                        <h3 className="select-row"> Email Address* <select id= "is this thing on?" onChange={changeMainColumn}>{renderOptions()}</select></h3>
-                        <h3 className="select-row"> First Name <select>{renderOptions()}</select></h3>
-                        <h3 className="select-row"> Last Name <select>{renderOptions()}</select></h3>
-                        <h3 className="select-row"> LinkedIn URL <select>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> Email Address* <select onChange={changeMainColumn} id = "0" value={selectValue[0]}>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> First Name <select onChange={changeMainColumn} id = "1" value={selectValue[1]}>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> Last Name <select onChange={changeMainColumn} id = "2" value={selectValue[2]}>{renderOptions()}</select></h3>
+                        <h3 className="select-row"> LinkedIn URL <select onChange={changeMainColumn} id = "3" value={selectValue[3]}>{renderOptions()}</select></h3>
                         </section>
                         <section>
                             <h3> Custom Fields <input type="checkbox" checked={fieldCheck} onChange={() => setFieldCheck(!fieldCheck)}></input></h3>
