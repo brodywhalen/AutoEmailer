@@ -1,6 +1,7 @@
 import React, {useState,useEffect, ReactNode} from "react";
 import Papa, { ParseResult } from 'papaparse';
 import { AddedParam } from "../utils/types";
+import axios from "axios";
 
 const UploadCSV = () => {
 
@@ -74,9 +75,21 @@ const renderAddedParamsList = () =>{
 
     
     // map all added params state to a list. Contains input for param name and dropbox to assign column. X button deletes param and + addes another param.
-    const myitems = addedParams?.map((_param, index) => <div><label> Field Name </label><input value={addedParams[index].param} onChange={(event) => changeParamTitle(index,event)}/> <select onChange={(event) => changeParamValue(index, event)}>{renderOptions()}</select>
-        <button onClick={(event) => addParam(event,index)}> ➕ </button><button> ➖ </button></div>
-       
+    const myitems = addedParams?.map((_param, index) =>{
+    
+        console.log("index: ", index)
+        return(
+        <div>
+        <label> Field Name </label><input value={addedParams[index].param} onChange={(event) => changeParamTitle(index,event)}/> <select onChange={(event) => changeParamValue(index, event)}>{renderOptions()}</select>
+        {((index === 0) && (addedParams.length === 1)) 
+            ? (<><button onClick={(event) => addParam(event,index)}> ➕ </button></>) 
+            : <><button onClick={(event) => addParam(event,index)}> ➕ </button><button onClick={(event) => removeParam(event,index)}> ➖ </button></>
+        }
+        
+        
+        </div>
+        )
+    }
     )
     console.log(addedParams)
     return( myitems)
@@ -89,6 +102,12 @@ const addParam = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, index:
     //splice in the addition with an empty state
     clonedArray.splice(index +1, 0, { param: "", value: ""})
    // set state
+    setAddedParams(clonedArray)
+}
+const removeParam = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
+    event.preventDefault();
+    const clonedArray = addedParams.map(a => { return {...a}})
+    clonedArray.splice(index, 1)
     setAddedParams(clonedArray)
 }
 const changeParamTitle = (index:number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,6 +129,16 @@ const changeMainColumn = (event : React.ChangeEvent<HTMLSelectElement>) => {
     //     if(this.id
     // })
 }
+const PostList =  async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    const ListObject = {
+        listName: `test ${Math.random()}`,
+        contacts: parsedFile
+        // find out how to parse file into backend document
+
+    }
+    // await axios.post('/createList', listObject)
+}
 
 
 
@@ -129,7 +158,7 @@ const changeMainColumn = (event : React.ChangeEvent<HTMLSelectElement>) => {
                 </li>
                 <li className="menu-list"> Map Columns </li>
                 {myFile && checkFileType(myFile) ? (
-                    <form className="menu-list-select">
+                    <form className="menu-list-select" onSubmit={PostList}>
                         <section className="menu-list-column-select">
                         <h3 className="select-row"> Email Address* <select id= "is this thing on?" onChange={changeMainColumn}>{renderOptions()}</select></h3>
                         <h3 className="select-row"> First Name <select>{renderOptions()}</select></h3>
@@ -140,6 +169,7 @@ const changeMainColumn = (event : React.ChangeEvent<HTMLSelectElement>) => {
                             <h3> Custom Fields <input type="checkbox" checked={fieldCheck} onChange={() => setFieldCheck(!fieldCheck)}></input></h3>
                             {fieldCheck ? (renderAddedParamsList()): (<div></div>)}
                         </section>
+                        <button type="submit"> Create List </button>
                     </form>
                 ): (<div></div>)}
 
