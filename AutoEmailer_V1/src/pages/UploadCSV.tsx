@@ -1,7 +1,9 @@
 import React, {useState,useEffect, ReactNode} from "react";
 import Papa, { ParseResult } from 'papaparse';
 import { AddedParam } from "../utils/types";
-import axios from "axios";
+// import { ParsedResults } from "../utils/types";
+// import { parsedDataObject } from "../utils/types";
+// import axios from "axios";
 
 const UploadCSV = () => {
 
@@ -9,9 +11,10 @@ const UploadCSV = () => {
     
     // const fileInputRef = useRef(null);
     const [myFile, setMyFile] = useState<File>();
-    const [parsedFile, setParsedFile] = useState<ParseResult<string[]>>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [parsedFile, setParsedFile] = useState<ParseResult<any>>();
     const [fieldCheck, setFieldCheck] = useState<boolean>(false);
-    const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: 'test', value: "testy"}]) // test value at first
+    const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: '', value: "0"}]) // test value at first
     const [selectValue, setSelectValue] = useState<number[]>([0,0,0,0]);
    
     // have column values stored, now just need to send to backend properly.
@@ -19,9 +22,10 @@ const UploadCSV = () => {
     
     useEffect (()=> 
         
-        // console.log('data: ',parsedFile, 'header name: ',parsedFile?.meta), [parsedFile]
-        console.log('selected: ', selectValue),[selectValue]   
-        // console.log('paramvalues: ', addedParams[0].param), [addedParams]
+        console.log('parsedfile: ',parsedFile), [parsedFile]
+        // console.log('selected: ', selectValue)
+        // console.log('paramvalues: ', addedParams)}, [addedParams,selectValue]
+       
     ) 
 
     const onFileChange = (event:React.ChangeEvent<HTMLInputElement>)=> {
@@ -30,10 +34,12 @@ const UploadCSV = () => {
 
         // parse file right after whcih will set to state
         parseStringyFile(event.target.files![0]);
-
-        // if(myFile && checkFileType(event.target.files![0])){
-
-        // }
+        
+        setFieldCheck(false)
+        setSelectValue([0,0,0,0])
+        setAddedParams([{param: '', value: "0"}])
+        
+        
     }
     const checkFileType = (myFile: File): boolean => {
         const filenameEXT = (myFile.name.split('.').pop() as string).toLowerCase();
@@ -62,7 +68,8 @@ const UploadCSV = () => {
         if(myFile){
             //call back function that runs after file is read
             const localParse = (myString:string):void => {
-                const parsed: ParseResult<string[]> = Papa.parse(myString, {header: true})
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const parsed: ParseResult<any> = Papa.parse(myString, {header: true})
                 //saves to state
                 setParsedFile(parsed)
             }
@@ -74,7 +81,7 @@ const UploadCSV = () => {
 const renderOptions = ():ReactNode => {
     
     // render options as headers pulled from file, save value as index of meta fields.
-    const options = parsedFile?.meta.fields?.map((header, index) => <option value={index + 1}>{header}</option>)
+    const options = parsedFile?.meta.fields?.map((header, index) => <option key={index + 1} value={index + 1}>{header}</option>)
     return(<><option value={0}> no column </option>{options}</>) // 0 value is set as no data assigned.
 }
 const renderAddedParamsList = () =>{
@@ -83,10 +90,10 @@ const renderAddedParamsList = () =>{
     // map all added params state to a list. Contains input for param name and dropbox to assign column. X button deletes param and + addes another param.
     const myitems = addedParams?.map((_param, index) =>{
     
-        console.log("index: ", index)
+        // console.log("index: ", index)
         return(
         <div>
-        <label> Field Name </label><input value={addedParams[index].param} onChange={(event) => changeParamTitle(index,event)}/> <select onChange={(event) => changeParamValue(index, event)}>{renderOptions()}</select>
+        <label> Field Name </label><input value={addedParams[index].param} onChange={(event) => changeParamTitle(index,event)}/> <select value = {addedParams[index].value} onChange={(event) => changeParamValue(index, event)}>{renderOptions()}</select>
         {((index === 0) && (addedParams.length === 1)) 
             ? (<><button onClick={(event) => addParam(event,index)}> ➕ </button></>) 
             : <><button onClick={(event) => addParam(event,index)}> ➕ </button><button onClick={(event) => removeParam(event,index)}> ➖ </button></>
@@ -97,16 +104,16 @@ const renderAddedParamsList = () =>{
         )
     }
     )
-    console.log(addedParams)
+    // console.log(addedParams)
     return( myitems)
 }
 const addParam = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, index:number) => {
     event.preventDefault()
-    console.log('adding after index: ', index)
+    // console.log('adding after index: ', index)
     // need to copy objects with spread syntax
     const clonedArray = addedParams.map(a => {return {...a}})
     //splice in the addition with an empty state
-    clonedArray.splice(index +1, 0, { param: "", value: ""})
+    clonedArray.splice(index +1, 0, { param: "", value: "0"})
    // set state
     setAddedParams(clonedArray)
 }
@@ -123,13 +130,13 @@ const changeParamTitle = (index:number, event: React.ChangeEvent<HTMLInputElemen
 }
 const changeParamValue = (index: number, event: React.ChangeEvent<HTMLSelectElement>) => {
     const clonedArray = addedParams.map(a => {return {...a}})
-    clonedArray[index].param = event.target.value;
+    clonedArray[index].value = event.target.value;
     setAddedParams(clonedArray)
 }
 const changeMainColumn = (event : React.ChangeEvent<HTMLSelectElement>) => {
     
     
-    console.log('this :',event.target.value)
+    // console.log('this :',event.target.value)
     const fieldID = event.target.id;
 
     const newArray = selectValue.map( (c,i) => {
@@ -155,26 +162,43 @@ const PostList =  async (event: { preventDefault: () => void; }) => {
 
 
     event.preventDefault();
+    const headerArray = parsedFile?.meta.fields; // get header array and add no columns as first index
+    const emailHeader = (headerArray as string[])[selectValue[0]-1]
+    const firstNameHeader = (headerArray as string[])[selectValue[1]-1]
+    const lastNameHeader = (headerArray as string[])[selectValue[2]-1]
+    const LIHeader = (headerArray as string[])[selectValue[3]-1]
+    // console.log('emailheader: ', emailHeader)
+
     const ListObject = {
         listName: `test ${Math.random()}`,
-        contacts: parsedFile?.data.map( column => {
-            
-            if(fieldCheck){
-                return(
-                    // this will return the added params
-                    addedParams
-                );
-            }
-            return(
-                {
-                
-                }
-            )
-        })
-        // find out how to parse file into backend document
+        contacts: parsedFile?.data.map(row => {
+            // console.log('row: ', row)
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            return ({
+                email: row[emailHeader],
+                name: {first: row[firstNameHeader], last: row[lastNameHeader]},
+                linkedIn: row[LIHeader],
+                addedParams: addedParams.map(param => {
+                    const paramHeader = (headerArray as string[])[Number(param.value) -1]
+
+                    return(
+                        {
+                        
+                            param: param.param,
+                            value: row[paramHeader]
+                        }
+                    )
+                })
+                // add contact ID probally
+            })
+       
+        }),
+        user: 'test user'
 
     }
     // await axios.post('/createList', listObject)
+
+    console.log('listobj: ',ListObject);
 }
 
 
@@ -186,14 +210,14 @@ const PostList =  async (event: { preventDefault: () => void; }) => {
         <section className="menu-section">
             <h2 style={{margin: 0, textAlign: "left"}} > Steps </h2>
             <ol style={{margin:0}}className="menu-list-wrapper">
-                <li className="menu-list"> 
-                {myFile && checkFileType(myFile) ? (<text>✔️</text>) : <text>❌</text>}<text> Upload CSV </text>
+                <li key= "step1" className="menu-list"> 
+                {myFile && checkFileType(myFile) ? (<div>✔️</div>) : <div>❌</div>}<div> Upload CSV </div>
                     <form>
                         <input type='file' accept=".csv" id="myCSV" name="filename" onChange={onFileChange}></input>
                     </form>
 
                 </li>
-                <li className="menu-list"> Map Columns </li>
+                <li key = "step2" className="menu-list"> Map Columns </li>
                 {myFile && checkFileType(myFile) ? (
                     <form className="menu-list-select" onSubmit={PostList}>
                         <section className="menu-list-column-select">

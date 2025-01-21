@@ -4,6 +4,7 @@ const listSchema = new mongoose.Schema({
     contacts: [{
         name: {first: String, last: String},
         email: {type: String, required: true, unique: true},
+        linkedIn: String,
         addedParams: [{param: String, value: String}],
         userID: String
         }]
