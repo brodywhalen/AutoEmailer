@@ -1,6 +1,7 @@
 import React, {useState,useEffect, ReactNode} from "react";
 import Papa, { ParseResult } from 'papaparse';
 import { AddedParam } from "../utils/types";
+import Modal from "../components/Modal";
 // import { ParsedResults } from "../utils/types";
 // import { parsedDataObject } from "../utils/types";
 // import axios from "axios";
@@ -16,6 +17,7 @@ const UploadCSV = () => {
     const [fieldCheck, setFieldCheck] = useState<boolean>(false);
     const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: '', value: "0"}]) // test value at first
     const [selectValue, setSelectValue] = useState<number[]>([0,0,0,0]);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
    
     // have column values stored, now just need to send to backend properly.
 
@@ -168,12 +170,12 @@ const PostList =  async (event: { preventDefault: () => void; }) => {
     const lastNameHeader = (headerArray as string[])[selectValue[2]-1]
     const LIHeader = (headerArray as string[])[selectValue[3]-1]
     // console.log('emailheader: ', emailHeader)
-
+    setIsOpen(true)
     const ListObject = {
         listName: `test ${Math.random()}`,
         contacts: parsedFile?.data.map(row => {
             // console.log('row: ', row)
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+             
             return ({
                 email: row[emailHeader],
                 name: {first: row[firstNameHeader], last: row[lastNameHeader]},
@@ -230,6 +232,9 @@ const PostList =  async (event: { preventDefault: () => void; }) => {
                             <h3> Custom Fields <input type="checkbox" checked={fieldCheck} onChange={() => setFieldCheck(!fieldCheck)}></input></h3>
                             {fieldCheck ? (renderAddedParamsList()): (<div></div>)}
                         </section>
+                        <Modal open={isOpen} onClose = {() => setIsOpen(false)}>
+                           <input placeholder ='Name your list'/><button> Submit </button>
+                        </Modal>
                         <button type="submit"> Create List </button>
                     </form>
                 ): (<div></div>)}

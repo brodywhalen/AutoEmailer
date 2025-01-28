@@ -1,4 +1,5 @@
 import './../component-styles/MainMenu.css'
+import './../component-styles/ModalStyles.css'
 import { Link } from 'react-router-dom';
 
 const MainMenu = () => { 
