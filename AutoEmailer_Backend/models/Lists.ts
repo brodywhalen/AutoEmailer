@@ -6,8 +6,8 @@ const listSchema = new mongoose.Schema({
         email: {type: String, required: true, unique: true},
         linkedIn: String,
         addedParams: [{param: String, value: String}],
-        userID: String
-        }]
+        }],
+        user: String
     // Add user param after user authentication
 });
 

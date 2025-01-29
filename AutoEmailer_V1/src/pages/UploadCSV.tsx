@@ -2,9 +2,10 @@ import React, {useState,useEffect, ReactNode} from "react";
 import Papa, { ParseResult } from 'papaparse';
 import { AddedParam } from "../utils/types";
 import Modal from "../components/Modal";
+import { useRef } from "react";
 // import { ParsedResults } from "../utils/types";
 // import { parsedDataObject } from "../utils/types";
-// import axios from "axios";
+import axios from "axios";
 
 const UploadCSV = () => {
 
@@ -18,6 +19,10 @@ const UploadCSV = () => {
     const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: '', value: "0"}]) // test value at first
     const [selectValue, setSelectValue] = useState<number[]>([0,0,0,0]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const inputRef = useRef<any>(null);
+    
    
     // have column values stored, now just need to send to backend properly.
 
@@ -157,50 +162,48 @@ const changeMainColumn = (event : React.ChangeEvent<HTMLSelectElement>) => {
     //     if(this.id
     // })
 }
-const PostList =  async (event: { preventDefault: () => void; }) => {
+const createList =  async (event: { preventDefault: () => void; }) => {
 
     // need a way to store current state column ID
     // could set email --> Linkedin to 1-4, and then start custom fields from 5. 0 is no column assigned
 
 
     event.preventDefault();
+    // console.log('emailheader: ', emailHeader)
+    setIsOpen(true)
+
+}
+const postList = async () => {
+    // alert(`Name:  ${inputRef.current!.value}`)
+
     const headerArray = parsedFile?.meta.fields; // get header array and add no columns as first index
     const emailHeader = (headerArray as string[])[selectValue[0]-1]
     const firstNameHeader = (headerArray as string[])[selectValue[1]-1]
     const lastNameHeader = (headerArray as string[])[selectValue[2]-1]
     const LIHeader = (headerArray as string[])[selectValue[3]-1]
-    // console.log('emailheader: ', emailHeader)
-    setIsOpen(true)
+
     const ListObject = {
-        listName: `test ${Math.random()}`,
-        contacts: parsedFile?.data.map(row => {
-            // console.log('row: ', row)
-             
+        listName: inputRef.current.value,
+        contacts: parsedFile?.data.map(row => {        
             return ({
                 email: row[emailHeader],
                 name: {first: row[firstNameHeader], last: row[lastNameHeader]},
                 linkedIn: row[LIHeader],
                 addedParams: addedParams.map(param => {
                     const paramHeader = (headerArray as string[])[Number(param.value) -1]
-
                     return(
                         {
-                        
                             param: param.param,
                             value: row[paramHeader]
                         }
                     )
                 })
-                // add contact ID probally
             })
-       
         }),
         user: 'test user'
-
     }
-    // await axios.post('/createList', listObject)
-
     console.log('listobj: ',ListObject);
+
 }
 
 
@@ -221,7 +224,7 @@ const PostList =  async (event: { preventDefault: () => void; }) => {
                 </li>
                 <li key = "step2" className="menu-list"> Map Columns </li>
                 {myFile && checkFileType(myFile) ? (
-                    <form className="menu-list-select" onSubmit={PostList}>
+                    <form className="menu-list-select" onSubmit={createList}>
                         <section className="menu-list-column-select">
                         <h3 className="select-row"> Email Address* <select onChange={changeMainColumn} id = "0" value={selectValue[0]}>{renderOptions()}</select></h3>
                         <h3 className="select-row"> First Name <select onChange={changeMainColumn} id = "1" value={selectValue[1]}>{renderOptions()}</select></h3>
@@ -233,7 +236,7 @@ const PostList =  async (event: { preventDefault: () => void; }) => {
                             {fieldCheck ? (renderAddedParamsList()): (<div></div>)}
                         </section>
                         <Modal open={isOpen} onClose = {() => setIsOpen(false)}>
-                           <input placeholder ='Name your list'/><button> Submit </button>
+                           <input type= "text" name= "name" ref = {inputRef} placeholder ='Name your list'/><button onClick={postList}> Submit </button>
                         </Modal>
                         <button type="submit"> Create List </button>
                     </form>
