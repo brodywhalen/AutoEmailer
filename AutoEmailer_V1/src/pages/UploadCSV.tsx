@@ -5,7 +5,7 @@ import Modal from "../components/Modal";
 import { useRef } from "react";
 // import { ParsedResults } from "../utils/types";
 // import { parsedDataObject } from "../utils/types";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const UploadCSV = () => {
 
@@ -207,10 +207,17 @@ const postList = async () => {
 
     try{
         const response = await axios.post('http://localhost:3000/list/createList', ListObject)
+        alert('List Created!')
+        setIsOpen(false)  
         console.log('myres: ', response);
-    } catch (err){
+    } catch (error){
+
+        if(error instanceof AxiosError){
+            console.log(error.response!.data.error)
+            alert(error.response!.data.error)
+        }
         
-        console.log(err)
+        // console.log(err.response.data)
     }
 
     
