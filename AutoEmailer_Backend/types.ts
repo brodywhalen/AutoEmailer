@@ -3,10 +3,10 @@ export interface NewList {
     contacts: Contact[]
 }
 export interface Contact {
-    name: Name
+    name: {first: string, last: string}
     email: string
+    linkedIn: string
     addedParams: AddedParamList[]
-    userId: string
 }
 export interface Name {
     first: string,
@@ -15,4 +15,9 @@ export interface Name {
 export interface AddedParamList {
     param: string,
     value: string
+}
+export interface ListSchema {
+    listName: string
+    contacts: Contact[]
+    user: string  
 }

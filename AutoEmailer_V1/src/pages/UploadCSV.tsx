@@ -203,6 +203,17 @@ const postList = async () => {
         user: 'test user'
     }
     console.log('listobj: ',ListObject);
+    // communicate with backend
+
+    try{
+        const response = await axios.post('http://localhost:3000/list/createList', ListObject)
+        console.log('myres: ', response);
+    } catch (err){
+        
+        console.log(err)
+    }
+
+    
 
 }
 

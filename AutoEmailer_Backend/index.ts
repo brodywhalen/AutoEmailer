@@ -4,6 +4,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { requestLogger } from './middleware/logger'
+import { listRouter } from './controllers/list'
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ mongoose.connect(url).then(_result => {
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
+app.use('/list',listRouter)
 
 
 
