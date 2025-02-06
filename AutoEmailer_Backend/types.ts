@@ -21,3 +21,4 @@ export interface ListSchema {
     contacts: Contact[]
     user: string  
 }
+

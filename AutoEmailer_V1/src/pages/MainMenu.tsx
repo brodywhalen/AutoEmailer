@@ -10,7 +10,7 @@ const MainMenu = () => {
             <section className="menu-section">
                 <h2 className="menu-header"> My Lists </h2>
                 <Link  className="menu-link" to="/UploadCSV"> Import CSV</Link>
-                <button className="menu-button"> View Lists</button>
+                <Link className='menu-link' to = "/ViewList">View List</Link>
             </section>
             <section className="menu-section">
                 <h2 className="menu-header"> Automations </h2>

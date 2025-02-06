@@ -3,7 +3,7 @@ const listSchema = new mongoose.Schema({
     listName: {type: String, required: true, unique: true},
     contacts: [{
         name: {first: String, last: String},
-        email: {type: String, required: true, unique: true},
+        email: {type: String, required: true, unique: false},
         linkedIn: String,
         addedParams: [{param: String, value: String}],
         }],

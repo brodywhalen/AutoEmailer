@@ -22,9 +22,19 @@ listRouter.post('/createList',( request, _response) => {
         console.log('List Saved!')
     })
     .catch(error => {
-        
+
         return _response.status(400).json({error: error.message})
     })
     
+    
+})
+listRouter.get('/getData', async (_request, _response) => {
+    try{
+         const myLists = await List.find({})
+         _response.status(200).send(myLists)
+    }
+    catch {
+        console.log('error getting lists')
+    }
     
 })

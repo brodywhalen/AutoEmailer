@@ -3,9 +3,10 @@ import Papa, { ParseResult } from 'papaparse';
 import { AddedParam } from "../utils/types";
 import Modal from "../components/Modal";
 import { useRef } from "react";
-// import { ParsedResults } from "../utils/types";
-// import { parsedDataObject } from "../utils/types";
 import axios, { AxiosError } from "axios";
+import { Circles } from "react-loader-spinner";
+import BackButton from "../components/BackButton";
+// import { useNavigate } from "react-router-dom";
 
 const UploadCSV = () => {
 
@@ -19,6 +20,7 @@ const UploadCSV = () => {
     const [addedParams, setAddedParams] =useState<AddedParam[]>([{param: '', value: "0"}]) // test value at first
     const [selectValue, setSelectValue] = useState<number[]>([0,0,0,0]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inputRef = useRef<any>(null);
@@ -206,6 +208,7 @@ const postList = async () => {
     // communicate with backend
 
     try{
+        setIsLoading(true)
         const response = await axios.post('http://localhost:3000/list/createList', ListObject)
         alert('List Created!')
         setIsOpen(false)  
@@ -213,11 +216,19 @@ const postList = async () => {
     } catch (error){
 
         if(error instanceof AxiosError){
+
+            if(!error.response)
+            {
+                alert('No response from the server')
+            }
+
             console.log(error.response!.data.error)
             alert(error.response!.data.error)
         }
         
-        // console.log(err.response.data)
+        // cons ole.log(err.response.data)
+    } finally {
+        setIsLoading(false)
     }
 
     
@@ -229,6 +240,7 @@ const postList = async () => {
 
     return(
     <div>
+        <BackButton/>
         <h1 className="menu-header">Upload CSV</h1>
         <section className="menu-section">
             <h2 style={{margin: 0, textAlign: "left"}} > Steps </h2>
@@ -254,7 +266,10 @@ const postList = async () => {
                             {fieldCheck ? (renderAddedParamsList()): (<div></div>)}
                         </section>
                         <Modal open={isOpen} onClose = {() => setIsOpen(false)}>
-                           <input type= "text" name= "name" ref = {inputRef} placeholder ='Name your list'/><button onClick={postList}> Submit </button>
+                           
+                            {isLoading? <Circles wrapperStyle = {{display: "inline-block", padding: "4px", justifycontent: "center" }}height={"20"} width={"20"} color="black" ariaLabel="loading"/>:<></>}  
+                           <input type= "text" name= "name" ref = {inputRef} placeholder ='Name your list'/><button disabled = {isLoading} onClick={postList}> Submit </button>
+                           
                         </Modal>
                         <button type="submit"> Create List </button>
                     </form>
