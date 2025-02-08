@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
+ 
 import React, { MouseEventHandler } from "react";
 import ReactDom from 'react-dom'
 // import { useState } from "react";

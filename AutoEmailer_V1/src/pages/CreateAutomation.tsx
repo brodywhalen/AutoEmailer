@@ -5,6 +5,7 @@ import { useState } from "react";
 import { NewList } from "../utils/types";
 
 import Flow from "../components/Flow";
+import DnDFlow from "../components/Flow";
 
 // react node imports
 
@@ -35,7 +36,7 @@ const CreateAutomation = () => {
 
     return(<div>
         <BackButton/>
-        <Flow/>
+        <DnDFlow/>
 
     </div>)
 
