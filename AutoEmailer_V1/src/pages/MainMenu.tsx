@@ -15,7 +15,7 @@ const MainMenu = () => {
             <section className="menu-section">
                 <h2 className="menu-header"> Automations </h2>
                 <button className="menu-button"> Manage Automations </button>
-                <button className="menu-button"> Create New From List </button>
+                <Link className='menu-link' to = "/CreateAutomation">Create New From List</Link>
             </section>
 
         
