@@ -1,0 +1,13 @@
+.draggableNode {
+    background-color: white;
+    width: 25%;
+    border-radius: 4px;
+    border: 2px solid black
+    
+    
+
+
+}
+.draggableNode:active{
+    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3)
+}

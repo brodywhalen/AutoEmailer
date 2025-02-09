@@ -3,7 +3,8 @@ export const largestPropinObjArray = (props: largestPropinObjArrayProps) => {
     
     
     const max = props.objArray.reduce((prev: { [x: string]: number }, current: { [x: string]: number }) => {
-            return (prev && prev[props.property] > current[props.property] ? prev: current)
+        console.log('accumulator: ',prev[props.property])    
+        return (prev[props.property] > current[props.property] ? prev[props.property]: current[props.property])
         }
     )
 

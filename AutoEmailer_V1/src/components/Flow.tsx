@@ -16,6 +16,7 @@ import { useCallback } from 'react';
 import { BackgroundVariant } from '@xyflow/react';
 import { useState, useContext, createContext } from 'react';
 import { largestPropinObjArray } from '../utils/helperFuncs';
+import '../component-styles/flowStyles.css'
 const initialNodes = [
   {
     id: '1',
@@ -41,6 +42,7 @@ const initialEdges = [
   { id: 'e1-2', source: '1', target: '2' },
   { id: 'e2-3', source: '2', target: '3', animated: true },
 ];
+// const nodeTypes = {list} add node types here. Create seperate folder for node types. Documentation seems straight forward
 const largestProps = {
   objArray: initialNodes,
   property: 'id'
@@ -107,6 +109,8 @@ const onDrop = useCallback((event: React.DragEvent<HTMLDivElement> )=> {
     data: { label: `${type} node`}
   }
 
+  console.log('NewNode: ', newNode)
+
   setNodes((nodes) => nodes.concat(newNode))
 
 },[screenToFlowPosition, setNodes, type])
@@ -140,9 +144,9 @@ const OpenMenu = () => {
               >
                 <Controls/>
                 <Background variant = {BackgroundVariant.Lines} />
-                <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey'}}>
+                <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'column', alignItems: 'center'}}>
                   <h2>Drag Nodes</h2>
-                  <div onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'list')} draggable> List </div>
+                  <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'list')} draggable> List </div>
                   <div> Email </div>
                   <div> LinkedIn </div>
                 </Panel>
