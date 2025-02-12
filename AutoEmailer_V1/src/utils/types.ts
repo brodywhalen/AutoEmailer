@@ -25,6 +25,7 @@ export interface metaObject{
 export interface NewList {
     listName: string
     contacts: Contact[]
+    id: string
 }
 export interface Contact {
     name: {first: string, last: string}

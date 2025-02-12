@@ -17,6 +17,13 @@ import { BackgroundVariant } from '@xyflow/react';
 import { useState, useContext, createContext } from 'react';
 import { largestPropinObjArray } from '../utils/helperFuncs';
 import '../component-styles/flowStyles.css'
+import { NewList } from '../utils/types';
+
+// import custom node
+
+import ListNode from './custom-nodes/ListNode';
+
+
 const initialNodes = [
   {
     id: '1',
@@ -43,6 +50,7 @@ const initialEdges = [
   { id: 'e2-3', source: '2', target: '3', animated: true },
 ];
 // const nodeTypes = {list} add node types here. Create seperate folder for node types. Documentation seems straight forward
+
 const largestProps = {
   objArray: initialNodes,
   property: 'id'
@@ -51,11 +59,17 @@ let id = largestPropinObjArray(largestProps); // for DND id pirposes.
 const getId = () => `dndnode_${id++}`
 // DND Context Code
 
-const DnDContext = createContext<[string | null, (type: string) => void]>([null, (_:string) => {}]);
-const DnDProvider = ({children}: {children: React.ReactNode}) => {
+interface DNDProviderProps {
+  children: React.ReactNode,
+  myLists: NewList[]
+}
+
+
+const DnDContext = createContext<[string | null, (type: string) => void, NewList[]]>([null, (_:string) => {}, [{listName: '', contacts: [], id: ''}]]);
+const DnDProvider = ({children, myLists}: DNDProviderProps) => {
   const [myType, setMyType] = useState<string | null>(null);
   return(
-    <DnDContext.Provider value = {[myType, setMyType]}>
+    <DnDContext.Provider value = {[myType, setMyType, myLists]}>
       {children}
     </DnDContext.Provider>
   )
@@ -66,8 +80,13 @@ const useDnD = () => {
   return useContext(DnDContext)
 }
 
-
+// begin component code
 const Flow = () => {
+
+
+
+
+
 
 
 const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -78,7 +97,8 @@ const {screenToFlowPosition} = useReactFlow();
 
 //Event listener code
 
-const [type, setType] = useDnD();
+const [type, setType,myLists] = useDnD();
+const nodeTypes = {listNode: ListNode}
 
 const onConnect = useCallback(
     (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
@@ -98,22 +118,42 @@ const onDrop = useCallback((event: React.DragEvent<HTMLDivElement> )=> {
   if (!type){
     return;
   }
+
+const deleteNodebyID = (id: string) => {
+  setNodes((nodes) => nodes.filter((node) => node.id !== id))
+}  
+
   const position = screenToFlowPosition({
     x: event.clientX,
     y: event.clientY
   })
-  const newNode = {
-    id: getId(),
-    type,
-    position,
-    data: { label: `${type} node`}
+
+  if(type === 'listNode'){
+    const newNode = {
+        id: getId(),
+        type,
+        position,
+        data: { label: `${type} node`,
+        lists: myLists,
+        deleteNode: deleteNodebyID}
+    }
+    setNodes((nodes) => nodes.concat(newNode))
+  } else {
+    const newNode = {
+      id: getId(),
+      type,
+      position,
+      data: { label: `${type} node`}
+    }
+    setNodes((nodes) => nodes.concat(newNode))
   }
 
-  console.log('NewNode: ', newNode)
 
-  setNodes((nodes) => nodes.concat(newNode))
+  // console.log('NewNode: ', newNode)
 
-},[screenToFlowPosition, setNodes, type])
+  // setNodes((nodes) => nodes.concat(newNode))
+
+},[screenToFlowPosition, setNodes, type, myLists])
 
 const onDragStart = (event:React.DragEvent, nodeType:string) => {
   setType(nodeType);
@@ -126,6 +166,7 @@ const onDragStart = (event:React.DragEvent, nodeType:string) => {
 const OpenMenu = () => {
   setMenuToggle(true)
 }
+
 
 // drag and drop functionality
 
@@ -140,13 +181,14 @@ const OpenMenu = () => {
               onConnect={onConnect}
               onDrop={onDrop}
               onDragOver={onDragOver}
+              nodeTypes={nodeTypes}
               fitView
               >
                 <Controls/>
                 <Background variant = {BackgroundVariant.Lines} />
-                <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'column', alignItems: 'center'}}>
+                <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'column', alignItems: 'center', borderRadius: '8px' }}>
                   <h2>Drag Nodes</h2>
-                  <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'list')} draggable> List </div>
+                  <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'listNode')} draggable> List </div>
                   <div> Email </div>
                   <div> LinkedIn </div>
                 </Panel>
@@ -158,9 +200,9 @@ const OpenMenu = () => {
     )
 }
 
-const DnDFlow = () => { return(
+const DnDFlow = ({myLists}: {myLists: NewList[]}) => { return(
   <ReactFlowProvider>
-    <DnDProvider>
+    <DnDProvider myLists={myLists}>
       <Flow/>
     </DnDProvider>
   </ReactFlowProvider>)
