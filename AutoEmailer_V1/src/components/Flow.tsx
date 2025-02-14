@@ -51,7 +51,7 @@ const initialEdges = [
 ];
 // const nodeTypes = {list} add node types here. Create seperate folder for node types. Documentation seems straight forward
 
-const nodeTypes = {listNode: ListNode}
+// const nodeTypes = {listNode: ListNode}
 const largestProps = {
   objArray: initialNodes,
   property: 'id'
