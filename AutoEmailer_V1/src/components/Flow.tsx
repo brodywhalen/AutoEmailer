@@ -17,11 +17,7 @@ import { BackgroundVariant } from '@xyflow/react';
 import { useState, useContext, createContext } from 'react';
 import { largestPropinObjArray } from '../utils/helperFuncs';
 import '../component-styles/flowStyles.css'
-<<<<<<< HEAD
 import { NewList } from '../utils/types';
-=======
-
->>>>>>> 51a1e90c36342c8e551300f2a3d0637a3021c51f
 
 // import custom node
 
@@ -54,11 +50,8 @@ const initialEdges = [
   { id: 'e2-3', source: '2', target: '3', animated: true },
 ];
 // const nodeTypes = {list} add node types here. Create seperate folder for node types. Documentation seems straight forward
-<<<<<<< HEAD
 
-=======
 const nodeTypes = {listNode: ListNode}
->>>>>>> 51a1e90c36342c8e551300f2a3d0637a3021c51f
 const largestProps = {
   objArray: initialNodes,
   property: 'id'
