@@ -19,6 +19,7 @@ import { largestPropinObjArray } from '../utils/helperFuncs';
 import '../component-styles/flowStyles.css'
 import { NewList } from '../utils/types';
 
+
 // import custom node
 
 import ListNode from './custom-nodes/ListNode';
@@ -95,6 +96,8 @@ const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 const [menutoggle, setMenuToggle] = useState<boolean>(false)
 const {screenToFlowPosition} = useReactFlow();
 
+// let dragImage; 
+
 
 //Event listener code
 
@@ -107,6 +110,11 @@ const onConnect = useCallback(
 );
 const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
   event.preventDefault();
+
+
+
+
+
   if(event.dataTransfer) {
     event.dataTransfer.dropEffect = 'move';
   }
@@ -115,12 +123,15 @@ const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
 
 const onDrop = useCallback((event: React.DragEvent<HTMLDivElement> )=> {
   event.preventDefault();
+  // console.log('dropped')
+  // eslint-disable-next-line prefer-const
 
   if (!type){
     return;
   }
 
 const deleteNodebyID = (id: string) => {
+  console.log('delete');
   setNodes((nodes) => nodes.filter((node) => node.id !== id))
 }  
 
@@ -134,9 +145,14 @@ const deleteNodebyID = (id: string) => {
         id: getId(),
         type,
         position,
+        // dragHandle: '.handle',
         data: { label: `${type} node`,
         lists: myLists,
-        deleteNode: deleteNodebyID}
+        deleteNode: deleteNodebyID,
+        // setNodes: setNodes,
+        // nodes: nodes,
+        selected_id: null 
+      }
     }
     setNodes((nodes) => nodes.concat(newNode))
   } else {
@@ -150,19 +166,24 @@ const deleteNodebyID = (id: string) => {
   }
 
 
-  // console.log('NewNode: ', newNode)
-
-  // setNodes((nodes) => nodes.concat(newNode))
-
 },[screenToFlowPosition, setNodes, type, myLists])
 
 const onDragStart = (event:React.DragEvent, nodeType:string) => {
   setType(nodeType);
+
+
+
+
+
   if(event.dataTransfer){
     event.dataTransfer.effectAllowed = 'move';
+    // event.dataTransfer.setDragImage( dragImage as Element, 0 , 0 );
+    // event.dataTransfer.setDragImage( dragImage as Element, (dragImage as HTMLElement).offsetWidth/2 , (dragImage as HTMLElement).offsetHeight/2 );
   }
   
 };
+
+
 
 const OpenMenu = () => {
   setMenuToggle(true)
