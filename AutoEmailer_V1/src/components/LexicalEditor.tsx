@@ -7,6 +7,8 @@ import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {ContentEditable} from '@lexical/react/LexicalContentEditable';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
+// import ToolbarPlugin from './plugins/ToolbarPlugin';
+import '../component-styles/EditorStyles.css' 
 
 const theme = {
 }
@@ -27,15 +29,18 @@ const LexicalEditor = () => {
 
     return (
         <LexicalComposer initialConfig={initialConfig}>
-            <RichTextPlugin
-                contentEditable={
-                    <ContentEditable
-                        aria-placeholder={'compose your email...'}
-                        placeholder={<div> compose your email... </div>}
-                    />
-                }
-                ErrorBoundary={LexicalErrorBoundary}
-            />
+            <div style={{width: '350px', height: ''}}>
+                <RichTextPlugin
+                    contentEditable={
+                        <ContentEditable
+                            style={{height: "200px", margin: "8px"}}
+                            aria-placeholder={'compose your email...'}
+                            placeholder={<div> compose your email... </div>}
+                        />
+                    }
+                    ErrorBoundary={LexicalErrorBoundary}
+                />
+            </div>
             <HistoryPlugin/>
             <AutoFocusPlugin/>
         </LexicalComposer>

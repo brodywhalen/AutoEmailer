@@ -89,7 +89,7 @@ const Flow = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [_menutoggle, setMenuToggle] = useState<boolean>(false)
+  // const [_menutoggle, setMenuToggle] = useState<boolean>(false)
   const {screenToFlowPosition} = useReactFlow();
 
 // let dragImage; 
@@ -196,9 +196,9 @@ const nodeTypes = {
 
 
 
-  const OpenMenu = () => {
-    setMenuToggle(true)
-  }
+  // const OpenMenu = () => {
+  //   setMenuToggle(true)
+  // }
 
 
 // drag and drop functionality
