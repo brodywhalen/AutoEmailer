@@ -20,9 +20,11 @@ import '../component-styles/flowStyles.css'
 import { NewList } from '../utils/types';
 
 
-// import custom node
+// import custom nodes
 
 import ListNode from './custom-nodes/ListNode';
+import EmailNode from './custom-nodes/emailNode';
+
 
 
 const initialNodes = [
@@ -85,16 +87,10 @@ const useDnD = () => {
 // begin component code
 const Flow = () => {
 
-
-
-
-
-
-
-const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-const [menutoggle, setMenuToggle] = useState<boolean>(false)
-const {screenToFlowPosition} = useReactFlow();
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [_menutoggle, setMenuToggle] = useState<boolean>(false)
+  const {screenToFlowPosition} = useReactFlow();
 
 // let dragImage; 
 
@@ -102,38 +98,41 @@ const {screenToFlowPosition} = useReactFlow();
 //Event listener code
 
 const [type, setType,myLists] = useDnD();
-const nodeTypes = {listNode: ListNode}
+const nodeTypes = {
+  listNode: ListNode,
+  emailNode: EmailNode
+}
 
-const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
-    [setEdges],
-);
-const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-  event.preventDefault();
+  const onConnect = useCallback(
+      (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+      [setEdges],
+  );
+  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
 
 
 
 
 
-  if(event.dataTransfer) {
-    event.dataTransfer.dropEffect = 'move';
-  }
-  
-},[])
+    if(event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+    
+  },[])
 
-const onDrop = useCallback((event: React.DragEvent<HTMLDivElement> )=> {
-  event.preventDefault();
-  // console.log('dropped')
-  // eslint-disable-next-line prefer-const
+  const onDrop = useCallback((event: React.DragEvent<HTMLDivElement> )=> {
+    event.preventDefault();
+    // console.log('dropped')
+    
 
-  if (!type){
-    return;
-  }
+    if (!type){
+      return;
+    }
 
-const deleteNodebyID = (id: string) => {
-  console.log('delete');
-  setNodes((nodes) => nodes.filter((node) => node.id !== id))
-}  
+  const deleteNodebyID = (id: string) => {
+    console.log('delete');
+    setNodes((nodes) => nodes.filter((node) => node.id !== id))
+  }  
 
   const position = screenToFlowPosition({
     x: event.clientX,
@@ -155,39 +154,51 @@ const deleteNodebyID = (id: string) => {
       }
     }
     setNodes((nodes) => nodes.concat(newNode))
+  } else if (type == 'emailNode'){
+    const newNode = {
+      id:getId(),
+      type,
+      position,
+      data: {label: `${type} node`,
+        deleteNode: deleteNodebyID
+      },
+    
+    }
+    setNodes((nodes) => nodes.concat(newNode))
   } else {
     const newNode = {
       id: getId(),
       type,
       position,
-      data: { label: `${type} node`}
+      data: { label: `${type} node`,
+        deleteNode:deleteNodebyID}
     }
     setNodes((nodes) => nodes.concat(newNode))
   }
 
 
-},[screenToFlowPosition, setNodes, type, myLists])
+  },[screenToFlowPosition, setNodes, type, myLists])
 
-const onDragStart = (event:React.DragEvent, nodeType:string) => {
-  setType(nodeType);
-
-
+  const onDragStart = (event:React.DragEvent, nodeType:string) => {
+    setType(nodeType);
 
 
 
-  if(event.dataTransfer){
-    event.dataTransfer.effectAllowed = 'move';
-    // event.dataTransfer.setDragImage( dragImage as Element, 0 , 0 );
-    // event.dataTransfer.setDragImage( dragImage as Element, (dragImage as HTMLElement).offsetWidth/2 , (dragImage as HTMLElement).offsetHeight/2 );
+
+
+    if(event.dataTransfer){
+      event.dataTransfer.effectAllowed = 'move';
+      // event.dataTransfer.setDragImage( dragImage as Element, 0 , 0 );
+      // event.dataTransfer.setDragImage( dragImage as Element, (dragImage as HTMLElement).offsetWidth/2 , (dragImage as HTMLElement).offsetHeight/2 );
+    }
+    
+  };
+
+
+
+  const OpenMenu = () => {
+    setMenuToggle(true)
   }
-  
-};
-
-
-
-const OpenMenu = () => {
-  setMenuToggle(true)
-}
 
 
 // drag and drop functionality
@@ -211,7 +222,8 @@ const OpenMenu = () => {
                 <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'column', alignItems: 'center', borderRadius: '8px' }}>
                   <h2>Drag Nodes</h2>
                   <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'listNode')} draggable> List </div>
-                  <div> Email </div>
+                  <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'emailNode')} draggable> Email </div>
+                  {/* <div> Email </div> */}
                   <div> LinkedIn </div>
                 </Panel>
 

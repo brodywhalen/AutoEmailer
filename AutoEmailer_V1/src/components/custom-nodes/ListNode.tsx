@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+// import { useCallback } from 'react';
 import { Handle,  Position, useReactFlow } from '@xyflow/react'
 import { NewList } from '../../utils/types';
 import { useNodeId } from '@xyflow/react';
@@ -31,9 +31,9 @@ const ListNode = ({data}: {data: ListNodeProps}) => {
 
   const reactFlow = useReactFlow()
   
-  const onChange = useCallback((evt:React.ChangeEvent<HTMLInputElement>) => {
-    console.log(evt.target.value);
-  }, []);
+  // const onChange = useCallback((evt:React.ChangeEvent<HTMLInputElement>) => {
+  //   console.log(evt.target.value);
+  // }, []);
   const changeNodeState = (event: React.ChangeEvent<HTMLSelectElement>) => {
     // console.log('id selected: ',  event.target.value)
     // console.log('existing nodes: ', reactFlow.getNodes())
