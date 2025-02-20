@@ -1,4 +1,73 @@
-.toolbar {
+.editor-list-ol {
+  padding: 0;
+  margin: 0;
+  margin-left: 16px;
+}
+
+.editor-list-ul {
+  padding: 0;
+  margin: 0;
+  margin-left: 16px;
+}
+
+.editor-listitem {
+  margin: 8px 32px 8px 32px;
+}
+
+.editor-nested-listitem {
+  list-style-type: none;
+}
+
+pre::-webkit-scrollbar {
+  background: transparent;
+  width: 10px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: #999;
+}
+
+.debug-timetravel-panel {
+  overflow: hidden;
+  padding: 0 0 10px 0;
+  margin: auto;
+  display: flex;
+}
+
+.debug-timetravel-panel-slider {
+  padding: 0;
+  flex: 8;
+}
+
+.debug-timetravel-panel-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  flex: 1;
+  color: #fff;
+  font-size: 12px;
+}
+
+.debug-timetravel-panel-button:hover {
+  text-decoration: underline;
+}
+
+.debug-timetravel-button {
+  border: 0;
+  padding: 0;
+  font-size: 12px;
+  top: 10px;
+  right: 15px;
+  position: absolute;
+  background: none;
+  color: #fff;
+}
+
+.debug-timetravel-button:hover {
+  text-decoration: underline;
+}
+  
+  .toolbar {
     display: flex;
     margin-bottom: 1px;
     background: #fff;
@@ -83,43 +152,46 @@
     background-size: contain;
   }
   
+ 
+
   i.undo {
-    background-image: url(icons/arrow-counterclockwise.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/arrow-counterclockwise.svg);
   }
   
   i.redo {
-    background-image: url(icons/arrow-clockwise.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/arrow-clockwise.svg);
   }
   
   i.bold {
-    background-image: url(icons/type-bold.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/type-bold.svg);
   }
   
   i.italic {
-    background-image: url(icons/type-italic.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/type-italic.svg);
   }
   
   i.underline {
-    background-image: url(icons/type-underline.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/type-underline.svg);
   }
   
   i.strikethrough {
-    background-image: url(icons/type-strikethrough.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/type-strikethrough.svg);
   }
   
   i.left-align {
-    background-image: url(icons/text-left.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/text-left.svg);
   }
   
   i.center-align {
-    background-image: url(icons/text-center.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/text-center.svg);
   }
   
   i.right-align {
-    background-image: url(icons/text-right.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/);
   }
   
   i.justify-align {
-    background-image: url(icons/justify.svg);
+    background-image: url(/AutoEmailer_V1/src/assets/icons/justify.svg);
+  
   }
   
