@@ -8,6 +8,7 @@ import {ContentEditable} from '@lexical/react/LexicalContentEditable';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
 import ToolbarPlugin from './lexical-plugins/ToolbarPlugin';
+import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 // import ToolbarPlugin from './plugins/ToolbarPlugin';
 import '../component-styles/EditorStyles.css' 
 
@@ -63,13 +64,15 @@ const LexicalEditor = () => {
     
 
     return (
-        <LexicalComposer initialConfig={initialConfig}>
-            <div style={{width: '350px', height: ''}}>
+      <div style={{height: '100%'}}>
+        <LexicalComposer initialConfig={initialConfig} >
+            <div className='pointer' >
                 <ToolbarPlugin/>
+                <TabIndentationPlugin/>
                 <RichTextPlugin
                     contentEditable={
                         <ContentEditable
-                            style={{height: "200px", margin: "8px"}}
+                            className='text-enter'
                             aria-placeholder={'compose your email...'}
                             placeholder={<div> compose your email... </div>}
                         />
@@ -80,6 +83,7 @@ const LexicalEditor = () => {
             <HistoryPlugin/>
             <AutoFocusPlugin/>
         </LexicalComposer>
+        </div>
     )
 
 

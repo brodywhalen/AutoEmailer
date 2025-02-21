@@ -71,3 +71,14 @@
 
     
   }
+  .resizable-box{
+    /* padding: '0px, border: '1px solid black', borderRadius: '4px', background: 'white', resize: 'both', overflow: 'auto' } */
+    padding: 0px;
+    border: 1px solid black;
+    border-radius: 4px;
+    background: white;
+    resize: both;
+    overflow:auto;
+    min-width:fit-content;
+    min-height: fit-content;
+  }

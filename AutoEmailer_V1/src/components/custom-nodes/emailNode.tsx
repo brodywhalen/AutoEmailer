@@ -19,9 +19,9 @@ const EmailNode = ({data}:{data:EmailNodeProps}) => {
     return(
 
 
-        <div style={{padding: '0px', border: '1px solid black', borderRadius: '4px', background: 'white'}}>
-            <div className='toolbar2'> List Node</div>
-            <div className='node-content' style={{padding: '4px'}}>
+        <div className='resizable-box'>
+            <div className='drag-handle toolbar2'> Email Node</div>
+            <div className='node-content' style={{padding: '4px', height: '100%'}}>
             { id ? <a  className = "exitButton nodrag" onClick={() => data.deleteNode(id)}>  </a> : null}
             <LexicalEditor/>
                 

@@ -159,6 +159,7 @@ const nodeTypes = {
       id:getId(),
       type,
       position,
+      dragHandle: '.drag-handle',
       data: {label: `${type} node`,
         deleteNode: deleteNodebyID
       },
