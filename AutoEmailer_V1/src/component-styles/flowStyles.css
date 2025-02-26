@@ -40,6 +40,7 @@
   .exitButton:hover {
     /* opacity: .5; */
     box-shadow: inset 0px 0px 2px black;
+    cursor: pointer;
   }
   .exitButton:before, .exitButton:after {
     position: absolute;

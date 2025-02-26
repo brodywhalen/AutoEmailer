@@ -1,5 +1,5 @@
 // import React from "react"
-import { useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import axios, { AxiosError } from "axios"
 import BackButton from "../components/BackButton"
 import './../component-styles/MainMenu.css'
@@ -9,6 +9,7 @@ import Toogle from "../components/Toogle"
 
 const ViewList = () =>{
 const [lists, setLists] = useState<NewList[]>([])
+const [filter,setFilter] = useState<string>('')
 
 useEffect(()=> { (async()=>{
     
@@ -29,15 +30,20 @@ useEffect(()=> { (async()=>{
     
 })()},[])
 
+const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
+    setFilter(event.target.value)
+}
+
 return(
 <>
     <BackButton/>
     <div className="list-box">
     <h1 className="menu-title">My Lists</h1>
-    {lists.map(list => {
+    <div style={{display: 'flex'}}><div style={{marginRight: '4px'}}>Search</div><input value = {filter} onChange = {handleFilterChange}/></div>
+    {lists.filter(item => item.listName.toLowerCase().includes(filter.toLowerCase()) ).map((list) => {
         return(
 
-            <Toogle listName = {list.listName}><div className="table-container"><Table list={list}/></div></Toogle>
+            <Toogle key={list.id} listName = {list.listName}><div className="table-container"><Table list={list}/></div></Toogle>
 
             // 
 
