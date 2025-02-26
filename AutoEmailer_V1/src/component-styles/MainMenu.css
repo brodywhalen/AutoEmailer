@@ -41,10 +41,11 @@
     text-align: left;
 }
 .list-box{
+    margin-top: 10vh;
   display: flex;
   flex-direction: column;  /* Stack children vertically */
   align-items: center;     /* Center children horizontally */
-  justify-content: center; /* Optional: Center children vertically in the parent */
+  /* justify-content: center; Optional: Center children vertically in the parent */
   height: 100vh;        
 }
 .list-item{
