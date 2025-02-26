@@ -1,5 +1,6 @@
 // import React from "react"
 import { NewList } from "../utils/types"
+import '../component-styles/MainMenu.css'
 
 const Table = ({list}:{list:NewList}) => {
     const contacts = list.contacts;

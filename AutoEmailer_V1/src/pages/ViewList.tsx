@@ -5,6 +5,7 @@ import BackButton from "../components/BackButton"
 import './../component-styles/MainMenu.css'
 import {NewList} from '../utils/types'
 import Table from "../components/Table"
+import Toogle from "../components/Toogle"
 
 const ViewList = () =>{
 const [lists, setLists] = useState<NewList[]>([])
@@ -31,17 +32,21 @@ useEffect(()=> { (async()=>{
 return(
 <>
     <BackButton/>
+    <div className="list-box">
     <h1 className="menu-title">My Lists</h1>
     {lists.map(list => {
         return(
 
-            <Table list={list}/>
+            <Toogle listName = {list.listName}><div className="table-container"><Table list={list}/></div></Toogle>
+
+            // 
 
 
             // <ul> {list.listName} {list.contacts[0].email}</ul>
         )
     })}
-
+    </div>
+    
 
 </>
 )

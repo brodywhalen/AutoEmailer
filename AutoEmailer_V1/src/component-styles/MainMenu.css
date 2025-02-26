@@ -40,3 +40,40 @@
 .menu-list-column-select{
     text-align: left;
 }
+.list-box{
+  display: flex;
+  flex-direction: column;  /* Stack children vertically */
+  align-items: center;     /* Center children horizontally */
+  justify-content: center; /* Optional: Center children vertically in the parent */
+  height: 100vh;        
+}
+.list-item{
+    display: flex;
+    flex-direction: row;
+}
+table {
+    width: 100%; /* Makes the table take up the full width of its container */
+    border-collapse: collapse; /* Ensures borders are collapsed together */
+    table-layout: auto; /* Allows columns to adjust based on content */
+  }
+  
+  th, td {
+    border: 1px solid black; /* Adds border to table cells */
+    padding: 8px; /* Adds padding to cells for better readability */
+    text-align: left; /* Aligns text to the left by default */
+  }
+  
+  th {
+    background-color: #f2f2f2; /* Optional: Light gray background for header */
+  }
+  
+  table, th, td {
+    border: 1px solid black; /* Adds outline/border to the table and its cells */
+  }
+  
+.table-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px black solid
+
+}
