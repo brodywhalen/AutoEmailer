@@ -10,12 +10,14 @@ import {
     Controls,
     Connection,
     useReactFlow,
-    ReactFlowProvider
+    ReactFlowProvider,
+    NodeTypes,
+    type Node
   } from '@xyflow/react';
 import { useCallback } from 'react';
 import { BackgroundVariant } from '@xyflow/react';
 import { useState, useContext, createContext } from 'react';
-import { largestPropinObjArray } from '../utils/helperFuncs';
+// import { largestPropinObjArray } from '../utils/helperFuncs';
 import '../component-styles/flowStyles.css'
 import { NewList } from '../utils/types';
 
@@ -24,43 +26,10 @@ import { NewList } from '../utils/types';
 
 import ListNode from './custom-nodes/ListNode';
 import EmailNode from './custom-nodes/emailNode';
+import Timer from './custom-nodes/timer'
 
 
 
-const initialNodes = [
-  {
-    id: '1',
-    type: 'input',
-    data: { label: 'Input Node' },
-    position: { x: 250, y: 25 },
-  },
- 
-  {
-    id: '2',
-    // you can also pass a React component as a label
-    data: { label: <div>Default Node</div> },
-    position: { x: 100, y: 125 },
-  },
-  {
-    id: '3',
-    type: 'output',
-    data: { label: 'Output Node' },
-    position: { x: 250, y: 250 },
-  },
-];
-const initialEdges = [
-  { id: 'e1-2', source: '1', target: '2' },
-  { id: 'e2-3', source: '2', target: '3', animated: true },
-];
-// const nodeTypes = {list} add node types here. Create seperate folder for node types. Documentation seems straight forward
-
-// const nodeTypes = {listNode: ListNode}
-const largestProps = {
-  objArray: initialNodes,
-  property: 'id'
-}
-let id = largestPropinObjArray(largestProps); // for DND id pirposes.
-const getId = () => `dndnode_${id++}`
 // DND Context Code
 
 interface DNDProviderProps {
@@ -83,12 +52,58 @@ const DnDProvider = ({children, myLists}: DNDProviderProps) => {
 const useDnD = () => {
   return useContext(DnDContext)
 }
-
+let id = 0;
+const getId = () => `dndnode_${id++}`
 // begin component code
 const Flow = () => {
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+// interface NodeTypeData {
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   [key: string]: any
+// }
+// interface PositionData{
+//   [key:string]:number
+// }
+
+// interface NodeType {
+//   id:number,
+//   type:string,
+//   data: NodeTypeData,
+//   position: PositionData
+// }  
+// const initialNodes:Node[]|null[]  = [
+//   // {
+//   //   id: '1',
+//   //   type: 'input',
+//   //   data: { label: 'Input Node' },
+//   //   position: { x: 250, y: 25 },
+//   // },
+ 
+// ];
+// interface EdgeType {
+//   id: string,
+//   source: string,
+//   target: string,
+// }
+// const initialEdges: EdgeType[] = [
+  
+// ];
+// const nodeTypes = {list} add node types here. Create seperate folder for node types. Documentation seems straight forward
+
+// const nodeTypes = {listNode: ListNode}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// const initialNodes= [];
+// const largestProps = {
+//   objArray: initialNodes,
+//   property: 'id'
+// }
+
+// let id:number = largestPropinObjArray(largestProps); // for DND id pirposes.
+
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   // const [_menutoggle, setMenuToggle] = useState<boolean>(false)
   const {screenToFlowPosition} = useReactFlow();
 
@@ -140,7 +155,7 @@ const nodeTypes = {
   })
 
   if(type === 'listNode'){
-    const newNode = {
+    const newNode = [{
         id: getId(),
         type,
         position,
@@ -152,7 +167,8 @@ const nodeTypes = {
         // nodes: nodes,
         selected_id: null 
       }
-    }
+    }]
+    // const newNodes = nodes.concat(newNode) 
     setNodes((nodes) => nodes.concat(newNode))
   } else if (type == 'emailNode'){
     const newNode = {
@@ -178,7 +194,7 @@ const nodeTypes = {
   }
 
 
-  },[screenToFlowPosition, setNodes, type, myLists])
+  },[type, screenToFlowPosition, setNodes, myLists])
 
   const onDragStart = (event:React.DragEvent, nodeType:string) => {
     setType(nodeType);
@@ -220,12 +236,19 @@ const nodeTypes = {
               >
                 <Controls/>
                 <Background variant = {BackgroundVariant.Lines} />
-                <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'column', alignItems: 'center', borderRadius: '8px' }}>
-                  <h2>Drag Nodes</h2>
-                  <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'listNode')} draggable> List </div>
-                  <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'emailNode')} draggable> Email </div>
-                  {/* <div> Email </div> */}
-                  <div> LinkedIn </div>
+                <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'row', alignItems: 'center', borderRadius: '8px' }}>
+                  <div style={{display: 'flex', flexFlow: 'column', width: '50%', alignItems: 'center'}}>
+                    <h2>Drag Nodes</h2>
+                    <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'listNode')} draggable> List </div>
+                    <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'emailNode')} draggable> Email </div>
+                    {/* <div> Email </div> */}
+                    {/* <div> LinkedIn </div> */}
+                  </div>
+                  <div style={{display: 'flex', flexFlow: 'column', width: '50%', alignItems: 'center', justifyContent: 'start' }}>
+                    <h2> Logic </h2>
+                    <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'timerLogic')} draggable> Timer </div>
+                    <div className='draggableNode'> Response </div>
+                  </div>
                 </Panel>
 
 
