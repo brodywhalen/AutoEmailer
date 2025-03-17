@@ -115,7 +115,8 @@ const Flow = () => {
 const [type, setType,myLists] = useDnD();
 const nodeTypes = {
   listNode: ListNode,
-  emailNode: EmailNode
+  emailNode: EmailNode,
+  timerLogic: Timer
 }
 
   const onConnect = useCallback(
@@ -163,7 +164,7 @@ const nodeTypes = {
         data: { label: `${type} node`,
         lists: myLists,
         deleteNode: deleteNodebyID,
-        // setNodes: setNodes,
+        setNodes: setNodes,
         // nodes: nodes,
         selected_id: null 
       }
@@ -182,7 +183,22 @@ const nodeTypes = {
     
     }
     setNodes((nodes) => nodes.concat(newNode))
-  } else {
+  } else if(type == 'timerLogic'){
+    const newNode = {
+      id:getId(),
+      type,
+      position,
+      // dragHandle: '.drag-handle',
+      data: {label: `${type} node`,
+        deleteNode: deleteNodebyID
+      },
+    
+    }
+    setNodes((nodes) => nodes.concat(newNode))
+  } 
+  
+  
+  else {
     const newNode = {
       id: getId(),
       type,
@@ -247,7 +263,7 @@ const nodeTypes = {
                   <div style={{display: 'flex', flexFlow: 'column', width: '50%', alignItems: 'center', justifyContent: 'start' }}>
                     <h2> Logic </h2>
                     <div className='draggableNode' onDragStart={(event:React.DragEvent<HTMLDivElement>) => onDragStart(event, 'timerLogic')} draggable> Timer </div>
-                    <div className='draggableNode'> Response </div>
+                    <div className='draggableNode' onClick={() => console.log(nodes)}> logger </div>
                   </div>
                 </Panel>
 
