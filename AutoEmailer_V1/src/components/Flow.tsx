@@ -20,7 +20,7 @@ import { useState, useContext, createContext } from 'react';
 // import { largestPropinObjArray } from '../utils/helperFuncs';
 import '../component-styles/flowStyles.css'
 import { NewList } from '../utils/types';
-
+import { saveState } from '../services/saving';
 
 // import custom nodes
 
@@ -190,7 +190,8 @@ const nodeTypes = {
       position,
       // dragHandle: '.drag-handle',
       data: {label: `${type} node`,
-        deleteNode: deleteNodebyID
+        deleteNode: deleteNodebyID,
+        setNodes: setNodes
       },
     
     }
@@ -252,6 +253,10 @@ const nodeTypes = {
               >
                 <Controls/>
                 <Background variant = {BackgroundVariant.Lines} />
+                <Panel position='top-right' style={{backgroundColor: 'grey', padding: '4px', borderRadius: '4px'}}>
+                  <button style={{marginRight: '4px'}}> Save </button>
+                  <button onClick={() => saveState(nodes, edges)}> Save As </button>
+                </Panel>
                 <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'row', alignItems: 'center', borderRadius: '8px' }}>
                   <div style={{display: 'flex', flexFlow: 'column', width: '50%', alignItems: 'center'}}>
                     <h2>Drag Nodes</h2>

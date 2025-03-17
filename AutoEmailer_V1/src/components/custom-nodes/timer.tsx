@@ -1,5 +1,5 @@
 // import { Handle, useReactFlow } from "@xyflow/react"
-import { Handle,  Position, useReactFlow } from '@xyflow/react'
+import { Handle,  Position, useReactFlow, type Node } from '@xyflow/react'
 // import { NewList } from '../../utils/types';
 import { useNodeId } from '@xyflow/react';
 import '../../component-styles/flowStyles.css'
@@ -9,6 +9,8 @@ interface TimerProps {
     time: string;
     timezone: string;
     deleteNode: (id:string) => void
+    setNodes: React.Dispatch<React.SetStateAction<Node[]>>
+
 }
 
 const Timer = ({data}: {data:TimerProps}): React.ReactNode => {
@@ -19,7 +21,8 @@ const reactFlow = useReactFlow()
 const handleStyle = {}
 const id = useNodeId();
 const changeTime = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newNode = reactFlow.getNodes().map(node => {
+    console.log(event.target.value)
+    const newNodes = reactFlow.getNodes().map(node => {
         if(node.id === id){
             console.log('selected time', event.target.value)
             return{
@@ -31,8 +34,31 @@ const changeTime = (event: React.ChangeEvent<HTMLInputElement>) => {
             }
         } else {
             return node
+            
         }
     })
+        data.setNodes(newNodes)
+    
+}
+const changeZone = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(event.target.value)
+    const newNodes = reactFlow.getNodes().map(node => {
+        if(node.id === id){
+            console.log('selected time', event.target.value)
+            return{
+                ...node,
+                data:{
+                    ...node.data,
+                    timezone: event.target.value
+                }
+            }
+        } else {
+            return node
+            
+        }
+    })
+        data.setNodes(newNodes)
+
 } 
 
 return(
@@ -42,7 +68,7 @@ return(
           <div className='toolbar2'> Time </div>
           <div className='node-content' style={{padding: '4px'}}>
             { id ? <a  className = "exitButton nodrag" onClick={() => data.deleteNode(id)}>  </a> : null}
-              <input onChange={changeTime}type='time'/><select>{timezones.map(zone => <option> {zone}</option>)}</select>   
+              <input onChange={changeTime}type='time'/><select defaultValue= 'default' onChange={event => changeZone(event)}><option disabled value= 'default'> --- </option>{timezones.map(zone => <option key={zone}> {zone}</option>)}</select>   
               <Handle type="source" position={Position.Bottom} id="b" style={handleStyle}/>
               <Handle type ="target" position= {Position.Top} id= "a" style={handleStyle}/>
           </div>
