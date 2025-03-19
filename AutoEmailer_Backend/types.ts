@@ -21,4 +21,16 @@ export interface ListSchema {
     contacts: Contact[]
     user: string  
 }
-
+export interface FlowSchema{
+    id: string,
+    type: string,
+    position: {x:number, y:number}
+    measured: {height:number, width:number}
+    data: {
+        label: string
+        lists: ListSchema[] // this might be hella bad lol.
+        selected_id: string
+        time: string
+        timezone: string
+    }
+}

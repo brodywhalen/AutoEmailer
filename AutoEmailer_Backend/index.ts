@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import { requestLogger } from './middleware/logger'
 import { listRouter } from './controllers/list'
+import { flowRouter } from './controllers/flow'
 
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(express.json({limit: '100mb'}));
 // app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' })); do I have to body parse for large files?
 app.use(requestLogger);
 app.use('/list',listRouter)
+app.use('/flow',flowRouter)
 
 
 
