@@ -1,26 +1,32 @@
 import mongoose from "mongoose";
-import {List} from './Lists'
+// import {List} from './Lists'
+import { Schema } from "mongoose";
 
 // no edges saved yet!
 const flowSchema = new mongoose.Schema({
-    nodes: [{
+    nodes: [Schema.Types.Mixed]    
+               
+        // {
         
-        id: String,
-        type: String, 
-        position: {x: Number, y: Number}, 
-        measured:
-        {
-            height: Number,
-            width: Number,
-        },
-        data: {
-            label: String,
-            lists: [List],
-            selected_id: String,
-            time: String,
-            timezone: String
-        }
-    }]
+        // id: String,
+        // type: String, 
+        // ponpm run desition: {x: Number, y: Number}, 
+        // measured:
+        // {
+        //     height: Number,
+        //     width: Number,
+        // },
+        // data: {
+        //     label: String,
+        //     lists: Schema.Types.Mixed ,
+        //     selected_id: String,
+        //     time: String,
+        //     timezone: String
+        // },
+        // selected: Boolean,
+        // dragging:Boolean
+
+    
 });
 
 flowSchema.set('toJSON',{

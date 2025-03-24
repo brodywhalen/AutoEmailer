@@ -17,9 +17,10 @@ interface FlowObject {
 }
 
 
-export const saveState = (nodes: Node[], edges: Edge[]) => {
-    console.log(nodes, edges)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const  saveState = async (nodes: Node[], _edges: Edge[]) => {
+    console.log(nodes)
     const payload:FlowObject[] = nodes
-    const response = axios.post('http://localhost:3000/flow/saveFlow', payload)
+    const response = await axios.post('http://localhost:3000/flow/saveFlow', payload).then()
     console.log('saved list res: ', response)
 } 
