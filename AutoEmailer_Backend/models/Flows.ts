@@ -4,8 +4,11 @@ import { Schema } from "mongoose";
 
 // no edges saved yet!
 const flowSchema = new mongoose.Schema({
-    nodes: [Schema.Types.Mixed]    
-               
+    
+    flowname: String,
+    description: String,
+    nodes: [Schema.Types.Mixed],    
+    edges: [Schema.Types.Mixed]           
         // {
         
         // id: String,

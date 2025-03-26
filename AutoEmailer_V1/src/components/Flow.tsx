@@ -27,6 +27,9 @@ import { saveState } from '../services/saving';
 import ListNode from './custom-nodes/ListNode';
 import EmailNode from './custom-nodes/emailNode';
 import Timer from './custom-nodes/timer'
+import Modal from './Modal';
+import { useRef } from 'react';
+import { Circles } from 'react-loader-spinner';
 
 
 
@@ -106,6 +109,12 @@ const Flow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   // const [_menutoggle, setMenuToggle] = useState<boolean>(false)
   const {screenToFlowPosition} = useReactFlow();
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const flownameRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const descriptionRef = useRef<any>(null);
 
 // let dragImage; 
 
@@ -228,7 +237,10 @@ const nodeTypes = {
     
   };
 
-
+  const openSaveConfirm = async (event: { preventDefault: () => void; }) => {
+    event?.preventDefault();
+    setIsOpen(true);
+  }
 
   // const OpenMenu = () => {
   //   setMenuToggle(true)
@@ -255,7 +267,13 @@ const nodeTypes = {
                 <Background variant = {BackgroundVariant.Lines} />
                 <Panel position='top-right' style={{backgroundColor: 'grey', padding: '4px', borderRadius: '4px'}}>
                   <button style={{marginRight: '4px'}}> Save </button>
-                  <button onClick={() => saveState(nodes, edges)}> Save As </button>
+                  <button onClick={openSaveConfirm}> Save As </button>
+                  <Modal open = {isOpen} onClose={() => setIsOpen(false)}>
+                    {isLoading? <Circles wrapperStyle = {{display: "inline-block", padding: "4px", justifycontent: "center" }}height={"20"} width={"20"} color="black" ariaLabel="loading"/>:<></>}  
+                    <input type= "text" name= "name" ref = {flownameRef} placeholder ='Name your Flow'/>
+                    <input type= "text" name= "description" ref = {descriptionRef} placeholder ='Name your Flow'/>
+                    <button disabled = {isLoading} onClick={() => saveState(nodes, edges, flownameRef.current.value, descriptionRef.current.value, setIsLoading, setIsOpen )}> Save </button>
+                  </Modal>
                 </Panel>
                 <Panel position='bottom-center' style={{width : '75vw', height: '10vh', backgroundColor: 'grey', display: 'flex', flexFlow: 'row', alignItems: 'center', borderRadius: '8px' }}>
                   <div style={{display: 'flex', flexFlow: 'column', width: '50%', alignItems: 'center'}}>
