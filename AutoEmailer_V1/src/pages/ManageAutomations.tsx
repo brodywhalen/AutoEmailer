@@ -4,11 +4,12 @@ import axios from "axios"
 import { AxiosError } from "axios"
 // import { Background } from "@xyflow/react"
 import './../component-styles/flowtable.css'
+import { useNavigate } from "react-router-dom"
 
 const ManageAutomations = () => {
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const [useFlow, setUseFlow] = useState<any[]>([]) 
-
+    const navigate = useNavigate();
 
     useEffect(()=>{
    
@@ -34,23 +35,26 @@ const ManageAutomations = () => {
         <BackButton/>
         <div style={{display: 'block', alignItems: 'center'}}>
             <input></input>
-            <table>
-                <tbody >
-                    <tr>
-                        <th> Flow Name </th>
-                        <th className="description"> Description </th>
-                        <th> Node Count </th>
-                        <th> Edge Count </th>
-                        <th> Status </th>
-                        <th> View </th>
+            <table className= 'flow'>
+                <tbody className= 'flow' >
+                    <tr className= 'flow'>
+                        <th className= 'flow'> Flow Name </th>
+                        <th className= 'flow2 flow'> Description </th>
+                        <th className= 'flow'> Node Count </th>
+                        <th className= 'flow'> Edge Count </th>
+                        <th className= 'flow'> Status </th>
+                        <th className= 'flow'> View </th>
                     </tr>
                     {useFlow.map(flow => {
                         return(        
-                        <tr>
-                            <td>{flow.flowname} </td> 
-                            <td>{flow.description} </td>
-                            <td> {flow.nodes.length} </td>
-                            <td>{flow.edges.length} </td>
+                        <tr className= 'flow'>
+                            <td className= 'flow'>{flow.flowname} </td> 
+                            <td className= 'flow'>{flow.description} </td>
+                            <td className= 'flow'> {flow.nodes.length} </td>
+                            <td className= 'flow'>{flow.edges.length} </td>
+                            <td className="flow"> PLACEHOLDER </td>
+                            <td className="flow"> <button onClick={()=> navigate('/CreateAutomation', {state: flow})}> Open </button> </td>
+
                         </tr>)
 
                     })}

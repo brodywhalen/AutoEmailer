@@ -30,21 +30,25 @@ const ListNode = ({data}: {data: ListNodeProps}) => {
 
 
   const reactFlow = useReactFlow()
-  
   // const onChange = useCallback((evt:React.ChangeEvent<HTMLInputElement>) => {
   //   console.log(evt.target.value);
   // }, []);
-  const changeNodeState = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  interface changeNodeStateFace {
+    value: string;
+    setNodes: React.Dispatch<React.SetStateAction<Node[]>>
+  }
+  const changeNodeState = (props: changeNodeStateFace) => {
     // console.log('id selected: ',  event.target.value)
     // console.log('existing nodes: ', reactFlow.getNodes())
     // set new nodeset with changes
+    console.log(props.value)
     const newNodes: Node[] = reactFlow.getNodes().map(node => {
       if(node.id === id) {
-        console.log('selected_ID ', event.target.value)
+        console.log('selected_ID ', props.value)
         return{
           ...node,
           data:{...node.data, 
-            selected_id: event.target.value
+            selected_id: props.value
             
           }
           
@@ -55,8 +59,7 @@ const ListNode = ({data}: {data: ListNodeProps}) => {
       }
     })
     // console.log('newNodes: ', newNodes)
-    data.setNodes(newNodes);
-
+    props.setNodes(newNodes);
   }
 
   const id = useNodeId();
@@ -74,7 +77,7 @@ const ListNode = ({data}: {data: ListNodeProps}) => {
           <label style= {{padding: '2px'}}htmlFor="text">{'Select List'}</label>
           
           {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
-          <select defaultValue='default' style= {{padding: '2px'}}onChange={event => changeNodeState(event)} >
+          <select defaultValue='default' style= {{padding: '2px'}}onChange={(event) => changeNodeState({value: event.target.value, setNodes: data.setNodes})} >
             {listOptions(data.lists)}
           </select>
           <Handle type="source" position={Position.Bottom} id="a" style={handleStyle}/>

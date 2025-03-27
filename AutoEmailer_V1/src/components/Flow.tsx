@@ -14,7 +14,7 @@ import {
     NodeTypes,
     type Node
   } from '@xyflow/react';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { BackgroundVariant } from '@xyflow/react';
 import { useState, useContext, createContext } from 'react';
 // import { largestPropinObjArray } from '../utils/helperFuncs';
@@ -30,6 +30,8 @@ import Timer from './custom-nodes/timer'
 import Modal from './Modal';
 import { useRef } from 'react';
 import { Circles } from 'react-loader-spinner';
+// import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -60,49 +62,13 @@ const getId = () => `dndnode_${id++}`
 // begin component code
 const Flow = () => {
 
-// interface NodeTypeData {
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   [key: string]: any
-// }
-// interface PositionData{
-//   [key:string]:number
-// }
 
-// interface NodeType {
-//   id:number,
-//   type:string,
-//   data: NodeTypeData,
-//   position: PositionData
-// }  
-// const initialNodes:Node[]|null[]  = [
-//   // {
-//   //   id: '1',
-//   //   type: 'input',
-//   //   data: { label: 'Input Node' },
-//   //   position: { x: 250, y: 25 },
-//   // },
+
+  const location = useLocation()
+  const myFlow = location.state
  
-// ];
-// interface EdgeType {
-//   id: string,
-//   source: string,
-//   target: string,
-// }
-// const initialEdges: EdgeType[] = [
   
-// ];
-// const nodeTypes = {list} add node types here. Create seperate folder for node types. Documentation seems straight forward
-
-// const nodeTypes = {listNode: ListNode}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const initialNodes= [];
-// const largestProps = {
-//   objArray: initialNodes,
-//   property: 'id'
-// }
-
-// let id:number = largestPropinObjArray(largestProps); // for DND id pirposes.
-
+  
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -115,11 +81,19 @@ const Flow = () => {
   const flownameRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const descriptionRef = useRef<any>(null);
+  
+  useEffect(()=>{
+    if(location.state){
 
-// let dragImage; 
+    
+    setEdges(myFlow.edges)
+    setNodes(myFlow.nodes)
+    }
+
+  },[location.state, myFlow, setEdges, setNodes])
 
 
-//Event listener code
+
 
 const [type, setType,myLists] = useDnD();
 const nodeTypes = {

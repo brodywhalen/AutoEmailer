@@ -1,18 +1,18 @@
-table, th, td {
+table.flow, th.flow, td.flow{
     border: none;
     border-collapse: collapse;
   }
-  table{
+  table.flow{
     margin-top: 8px;
     table-layout: auto;
     
   }
-  th{
+  th.flow{
     padding: 8px 12px;
     white-space: nowrap;
     min-width: 100px;
   }
-  .description{
+  .flow2{
     width: 200px;
     /* scroll-behavior: auto; */
   }
