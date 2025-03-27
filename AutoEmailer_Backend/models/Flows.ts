@@ -5,31 +5,10 @@ import { Schema } from "mongoose";
 // no edges saved yet!
 const flowSchema = new mongoose.Schema({
     
-    flowname: String,
-    description: String,
+    flowname: {type: String, required: true, unique: true},
+    description: {type: String, required: false, unique: false},
     nodes: [Schema.Types.Mixed],    
-    edges: [Schema.Types.Mixed]           
-        // {
-        
-        // id: String,
-        // type: String, 
-        // ponpm run desition: {x: Number, y: Number}, 
-        // measured:
-        // {
-        //     height: Number,
-        //     width: Number,
-        // },
-        // data: {
-        //     label: String,
-        //     lists: Schema.Types.Mixed ,
-        //     selected_id: String,
-        //     time: String,
-        //     timezone: String
-        // },
-        // selected: Boolean,
-        // dragging:Boolean
-
-    
+    edges: [Schema.Types.Mixed]              
 });
 
 flowSchema.set('toJSON',{

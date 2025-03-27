@@ -1,0 +1,18 @@
+table, th, td {
+    border: none;
+    border-collapse: collapse;
+  }
+  table{
+    margin-top: 8px;
+    table-layout: auto;
+    
+  }
+  th{
+    padding: 8px 12px;
+    white-space: nowrap;
+    min-width: 100px;
+  }
+  .description{
+    width: 200px;
+    /* scroll-behavior: auto; */
+  }
