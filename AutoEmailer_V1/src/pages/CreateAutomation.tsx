@@ -15,7 +15,7 @@ import DnDFlow from "../components/Flow";
 const CreateAutomation = () => {
 
     const [list, setLists] = useState<NewList[]>([])
-    console.log(list)
+    // console.log(list)
 
 // import lists when the create automation page is open
     useEffect(() => {

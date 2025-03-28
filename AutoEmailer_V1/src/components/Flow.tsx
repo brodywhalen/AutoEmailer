@@ -83,16 +83,32 @@ const Flow = () => {
   const descriptionRef = useRef<any>(null);
   
   useEffect(()=>{
+
     if(location.state){
 
-    
     setEdges(myFlow.edges)
-    setNodes(myFlow.nodes)
+    console.log('flownodes: ', myFlow.nodes)
+    setNodes(myFlow.nodes.map((node:Node) => {
+      return({
+        ...node,
+        data: {
+          ...node.data,
+          deleteNode: deleteNodebyID,
+          setNodes: setNodes
+
+        }
+      })
+
+    }))
     }
 
-  },[location.state, myFlow, setEdges, setNodes])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
-
+  const deleteNodebyID = (id: string) => {
+    console.log('delete');
+    setNodes((nodes) => nodes.filter((node) => node.id !== id))
+  }  
 
 
 const [type, setType,myLists] = useDnD();
@@ -128,10 +144,7 @@ const nodeTypes = {
       return;
     }
 
-  const deleteNodebyID = (id: string) => {
-    console.log('delete');
-    setNodes((nodes) => nodes.filter((node) => node.id !== id))
-  }  
+
 
   const position = screenToFlowPosition({
     x: event.clientX,
@@ -194,6 +207,7 @@ const nodeTypes = {
   }
 
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[type, screenToFlowPosition, setNodes, myLists])
 
   const onDragStart = (event:React.DragEvent, nodeType:string) => {
